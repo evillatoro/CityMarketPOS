@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CITY MARKET - Terminal POS</title>
+</head>
+
+<body>
+    <div id="loginScreen">
+        <div class="login-card">
+            <h1>CITY MARKET</h1>
+            <p class="sub">POS Terminal</p>
+            <select id="loginUser"></select>
+            <input type="password" id="loginPin" placeholder="PIN" maxlength="8">
+            <button id="btnDoLogin">Ingresar</button>
+        </div>
+    </div>
+
+    <script>
+
+        let users = [
+            { id: 1, name: "Admin", pin: "1234", role: "admin" },
+            { id: 2, name: "Cashier 1", pin: "0000", role: "cashier" }
+        ];
+
+        const $ = id => document.getElementById(id);
+
+        // Login
+        function showLogin() {
+            $("loginUser").innerHTML = users.map(u => `<option value="${u.id}">${u.name} (${u.role})</option>`).join("");
+            $("loginPin").value = "";
+            $("loginScreen").classList.remove("hidden");
+        }
+
+        showLogin();
+    </script>
+</body>
+
+</html>
