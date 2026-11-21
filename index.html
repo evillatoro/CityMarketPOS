@@ -185,12 +185,29 @@
             <button class="h-btn" id="btnAssistant" title="Asistente">🤖</button>
             <button class="h-btn" id="btnTheme">🌙</button>
             <button class="h-btn" id="btnAdmin">⚙ Admin</button>
-            <button class="h-btn" id="btnLogout">Salir</button>
+            <button class="h-btn" id="btnLogout">Log Out</button>
+        </div>
+
+        <!-- opening cash for the day -->
+        <div class="overlay" id="openCashModal">
+            <div class="modal" style="max-width:400px;">
+                <div class="modal-h">Opening the Cash Register</div>
+                <div class="modal-b">
+                    <p style="margin-bottom:14px;color:var(--muted);font-size:0.95rem;">Indicate the amount of cash with which you begin the day (cash float).</p>
+                    <label>Initial cash ($)</label>
+                    <input type="number" id="openCashAmt" min="0" step="0.01" placeholder="0.00"
+                        style="font-size:1.3rem;text-align:center;">
+                </div>
+                <div class="modal-f">
+                    <button class="btn-ok" id="btnOpenCash" style="flex:1;">Open Cash Register</button>
+                </div>
+            </div>
         </div>
     </header>
 
     <script>
 
+        let openingCash = JSON.parse(localStorage.getItem('cm_opening') || "null");
         let users = [
             { id: 1, name: "Admin", pin: "1234", role: "admin" },
             { id: 2, name: "Cashier 1", pin: "0000", role: "cashier" }
@@ -205,6 +222,8 @@
             setTimeout(() => t.remove(), 3000);
         }
 
+        function money(n) { return "$" + (n || 0).toFixed(2); }
+
         // login
         function showLogin() {
             $("loginUser").innerHTML = users.map(u => `<option value="${u.id}">${u.name} (${u.role})</option>`).join("");
@@ -217,14 +236,34 @@
             const uid = parseInt($("loginUser").value);
             const pin = $("loginPin").value;
             const u = users.find(x => x.id === uid);
-            if (!u || u.pin !== pin) { toast("PIN incorrecto", "err"); return; }
+            if (!u || u.pin !== pin) { toast("incorrect PIN", "err"); return; }
             currentUser = u;
             $("userBadge").textContent = "👤 " + u.name;
             $("loginScreen").classList.add("hidden");
             toast("Welcome, " + u.name);
 
             setTimeout(() => { $("search").focus(); }, 150);
+
+            checkOpeningCash();
         }
+
+        function checkOpeningCash() {
+            const today = new Date().toDateString();
+            if (!openingCash || new Date(openingCash.date).toDateString() !== today) {
+                $("openCashAmt").value = openingCash && new Date(openingCash.date).toDateString() === today ? openingCash.amount : "";
+                $("openCashModal").classList.add("active");
+                setTimeout(() => $("openCashAmt").focus(), 200);
+            }
+        }
+        $("btnOpenCash").onclick = () => {
+            const amt = parseFloat($("openCashAmt").value);
+            if (isNaN(amt) || amt < 0) { toast("Enter a valid amount", "err"); return; }
+            openingCash = { date: new Date().toISOString(), amount: amt, user: currentUser?.name };
+            localStorage.setItem('cm_opening', JSON.stringify(openingCash));
+            $("openCashModal").classList.remove("active");
+            toast("cash register opens with " + money(amt));
+            setTimeout(() => $("search").focus(), 100);
+        };
 
         $("btnDoLogin").onclick = doLogin;
         $("loginPin").onkeyup = e => { if (e.key === "Enter") doLogin(); };
