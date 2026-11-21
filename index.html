@@ -48,7 +48,6 @@
             display: none;
         }
         
-
         .login-card {
             background: var(--card);
             border-radius: 20px;
@@ -153,6 +152,135 @@
             .header-right .datetime {
                 display: none;
             }
+        }
+
+        /* Modals */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 12px;
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--card);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            color: var(--text);
+            max-height: 92vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-h {
+            background: var(--primary);
+            color: #fff;
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .modal-h .x {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .modal-b {
+            padding: 18px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-b .amt {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .modal-b label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 0.88rem;
+        }
+
+        .modal-b input,
+        .modal-b select,
+        .modal-b textarea {
+            width: 100%;
+            padding: 11px;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .modal-f {
+            padding: 14px 18px;
+            display: flex;
+            gap: 8px;
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+
+        .modal-f button {
+            flex: 1;
+            padding: 11px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+        }
+
+        .btn-ok {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .toasts {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toast {
+            background: var(--card);
+            color: var(--text);
+            border-left: 4px solid var(--primary);
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            font-weight: 500;
+            font-size: 0.9rem;
+            animation: slideIn 0.25s ease;
+            max-width: 320px;
         }
     </style>
 </head>
