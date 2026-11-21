@@ -4,18 +4,190 @@
 <head>
     <meta charset="UTF-8">
     <title>CITY MARKET - Terminal POS</title>
+
+    <style>
+        :root {
+            --primary: #15803d;
+            --primary-dark: #166534;
+            --primary-light: #dcfce7;
+            --header-start: #fde047;
+            --header-end: #eab308;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --info: #2563eb;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.12);
+            --radius: 14px;
+            --sidebar-w: 220px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #loginScreen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #loginScreen.hidden {
+            display: none;
+        }
+        
+
+        .login-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 40px 36px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            width: 90%;
+            max-width: 380px;
+            border: 1px solid var(--border);
+        }
+
+        .login-card h1 {
+            font-size: 1.55rem;
+            margin-bottom: 4px;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .login-card .sub {
+            color: var(--muted);
+            margin-bottom: 28px;
+            font-size: 0.9rem;
+        }
+
+        .login-card select,
+        .login-card input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            background: var(--bg);
+            color: var(--text);
+            transition: border-color 0.15s;
+        }
+
+        .login-card select:focus,
+        .login-card input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 2px 8px rgba(21, 128, 61, 0.3);
+        }
+
+        .login-card button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+
+        header {
+            background: linear-gradient(135deg, var(--header-start) 0%, var(--header-end) 100%);
+            color: #1c1917;
+            padding: 0 20px;
+            height: 58px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(234, 179, 8, 0.25);
+            z-index: 50;
+            flex-shrink: 0;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                height: auto;
+                padding: 8px 12px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .header-right {
+                gap: 4px;
+            }
+
+            .login-card {
+                padding: 28px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-right .datetime {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div class="toasts" id="toasts"></div>
+
     <div id="loginScreen">
         <div class="login-card">
             <h1>CITY MARKET</h1>
             <p class="sub">POS Terminal</p>
             <select id="loginUser"></select>
             <input type="password" id="loginPin" placeholder="PIN" maxlength="8">
-            <button id="btnDoLogin">Ingresar</button>
+            <button id="btnDoLogin">Login</button>
         </div>
     </div>
+
+    <header>
+        <div class="brand">
+            <div class="brand-text">
+                <span class="brand-name">CITY MARKET</span>
+                <span class="brand-tag">POS</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="datetime" id="clock">--</div>
+            <div class="user-badge" id="userBadge">—</div>
+            <button class="h-btn" id="btnLowStock" style="display:none;">⚠ Stock <span class="badge-red"
+                    id="lowCount">0</span></button>
+            <button class="h-btn" id="btnAssistant" title="Asistente">🤖</button>
+            <button class="h-btn" id="btnTheme">🌙</button>
+            <button class="h-btn" id="btnAdmin">⚙ Admin</button>
+            <button class="h-btn" id="btnLogout">Salir</button>
+        </div>
+    </header>
 
     <script>
 
@@ -26,12 +198,36 @@
 
         const $ = id => document.getElementById(id);
 
-        // Login
+        function toast(msg, type = "ok") {
+            const t = document.createElement("div");
+            t.className = `toast ${type}`; t.textContent = msg;
+            $("toasts").appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        // login
         function showLogin() {
             $("loginUser").innerHTML = users.map(u => `<option value="${u.id}">${u.name} (${u.role})</option>`).join("");
             $("loginPin").value = "";
             $("loginScreen").classList.remove("hidden");
         }
+
+        // do login
+        function doLogin() {
+            const uid = parseInt($("loginUser").value);
+            const pin = $("loginPin").value;
+            const u = users.find(x => x.id === uid);
+            if (!u || u.pin !== pin) { toast("PIN incorrecto", "err"); return; }
+            currentUser = u;
+            $("userBadge").textContent = "👤 " + u.name;
+            $("loginScreen").classList.add("hidden");
+            toast("Welcome, " + u.name);
+
+            setTimeout(() => { $("search").focus(); }, 150);
+        }
+
+        $("btnDoLogin").onclick = doLogin;
+        $("loginPin").onkeyup = e => { if (e.key === "Enter") doLogin(); };
 
         showLogin();
     </script>
