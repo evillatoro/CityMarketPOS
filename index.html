@@ -352,6 +352,13 @@
 
         function money(n) { return "$" + (n || 0).toFixed(2); }
 
+        setInterval(() => {
+            $("clock").textContent = new Date().toLocaleString('en-US', {
+                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+            });
+        }, 1000);
+
         // login
         function showLogin() {
             $("loginUser").innerHTML = users.map(u => `<option value="${u.id}">${u.name} (${u.role})</option>`).join("");
