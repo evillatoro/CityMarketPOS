@@ -853,7 +853,14 @@
         function addToCart(id) {
             const ticket = t;
             const p = products.find(x => x.id === id);
-            ticket.cart.push({ id: p.id, barcode: p.barcode, name: p.name, price: p.price, qty: 1 });
+            if (!p || p.stock <= 0) return;
+            const ex = ticket.cart.find(i => i.id === id);
+            if (ex) {
+                if (ex.qty < p.stock) ex.qty++;
+                else { toast("No more stock", "warn"); return; }
+            } else {
+                ticket.cart.push({ id: p.id, barcode: p.barcode, name: p.name, price: p.price, qty: 1 });
+            }
             renderCart();
             toast(p.name + " added");
         }
