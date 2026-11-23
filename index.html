@@ -845,6 +845,18 @@
         </div>
     </div>
 
+    <!-- confirm -->
+    <div class="overlay" id="confirmModal">
+        <div class="modal" style="max-width:360px;">
+            <div class="modal-h" id="cTitle">Confirmar</div>
+            <div class="modal-b" style="text-align:center;font-size:1.05rem;" id="cMsg"></div>
+            <div class="modal-f">
+                <button class="btn-c" id="cNo">Cancelar</button>
+                <button class="btn-ok" id="cYes">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- opening cash for the day -->
     <div class="overlay" id="openCashModal">
         <div class="modal" style="max-width:400px;">
@@ -926,6 +938,22 @@
             t.className = `toast ${type}`; t.textContent = msg;
             $("toasts").appendChild(t);
             setTimeout(() => t.remove(), 3000);
+        }
+
+        function confirm(title, msg) {
+            return new Promise(res => {
+                $("cTitle").textContent = title; $("cMsg").textContent = msg;
+                $("confirmModal").classList.add("active");
+                const yes = () => { cleanup(); res(true); };
+                const no = () => { cleanup(); res(false); };
+                function cleanup() {
+                    $("confirmModal").classList.remove("active");
+                    $("cYes").removeEventListener("click", yes);
+                    $("cNo").removeEventListener("click", no);
+                }
+                $("cYes").addEventListener("click", yes);
+                $("cNo").addEventListener("click", no);
+            });
         }
 
         function money(n) { return "$" + (n || 0).toFixed(2); }
@@ -1027,6 +1055,15 @@
             $("search").focus();
         };
 
+        async function clearCart() {
+            const ticket = t;
+            if (ticket.cart.length && !(await confirm("Clear Sale", "Clear this sale?"))) return;
+            ticket.cart = [];
+            ticket.discount = 0;
+            $("disc").value = 0;
+            renderCart();
+        }
+
         function sub() { return t.cart.reduce((s, i) => s + i.price * i.qty, 0); }
         function discPct() { return Math.min(100, Math.max(0, parseFloat($("disc").value) || 0)); }
         function discAmt() { return sub() * discPct() / 100; }
@@ -1100,6 +1137,8 @@
             renderCart();
             toast(p.name + " added");
         }
+
+        $("btnNew").onclick = clearCart;
 
         // start up
         renderCats();
