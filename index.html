@@ -653,7 +653,7 @@
 
     <script>
         const DEFAULT_PRODUCTS = [
-            { id: 1, barcode: "7501000000011", name: "White Rice 1kg", stock: 45, price: 1.85, cost: 1.20, category: "Groceries" },
+            { id: 1, barcode: "7501000000011", name: "White Rice 1kg", stock: 2, price: 1.85, cost: 1.20, category: "Groceries" },
             { id: 2, barcode: "7501000000028", name: "Black Bean 1kg", stock: 38, price: 2.10, cost: 1.40, category: "Groceries" },
             { id: 3, barcode: "7501000000035", name: "Vegetable Oil 1L", stock: 52, price: 3.45, cost: 2.40, category: "Groceries" },
             { id: 4, barcode: "7501000000042", name: "White Sugar 1kg", stock: 60, price: 1.55, cost: 1.00, category: "Groceries" },
@@ -842,6 +842,17 @@
                 $("cartCount").textContent = ticket.cart.reduce((s, i) => s + i.qty, 0) + " items";
                 $("btnPay").disabled = false;
             }
+        }
+
+        function changeQty(id, d) {
+            const ticket = t;
+            const item = ticket.cart.find(i => i.id === id);
+            if (!item) return;
+            const p = products.find(x => x.id === id);
+            const nq = item.qty + d;
+            if (nq <= 0) { removeItem(id); return; }
+            if (nq > p.stock) { toast("No more stock.", "warn"); return; }
+            item.qty = nq; renderCart();
         }
 
         function removeItem(id) {
