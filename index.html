@@ -596,6 +596,30 @@
             <div class="cat-bar" id="catBar"></div>
             <div class="products-grid" id="grid"></div>
         </div>
+        <div class="cart-panel">
+            <div class="cart-head">
+                <span id="cartTitle">🛒 Sale #1</span>
+                <span id="cartCount">0 items</span>
+            </div>
+            <div class="cart-list" id="cartList">
+                <div class="empty">The cart is empty.<br>Select products.</div>
+            </div>
+            <div class="totals">
+                <div class="disc-row">
+                    <label>Discount %:</label>
+                    <input type="number" id="disc" min="0" max="100" value="0" step="0.5">
+                </div>
+                <div class="t-grid">
+                    <span class="lb">Subtotal</span><span class="vl" id="subEl">$0.00</span>
+                    <span class="lb">Discount</span><span class="vl" id="discEl">-$0.00</span>
+                    <span class="lb tot">TOTAL</span><span class="vl tot" id="totEl">$0.00</span>
+                </div>
+                <div class="acts">
+                    <button class="btn-gray" id="btnNew">Clear sale</button>
+                    <button class="btn-green" id="btnPay" disabled>Pay</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- opening cash for the day -->
@@ -661,6 +685,14 @@
 
         let lowTh = parseInt(localStorage.getItem('cm_lowstock')) || 5;
 
+        let t = {
+            id: "T" + Date.now(),
+            num: 1,
+            cart: [],
+            discount: 0,
+            createdAt: new Date().toISOString()
+        };
+
         let currentUser = null;
         let curFilter = "", curCat = "All", payMethod = "cash", salesFilter = "today";
 
@@ -698,6 +730,8 @@
             currentUser = u;
             $("userBadge").textContent = "👤 " + u.name;
             $("loginScreen").classList.add("hidden");
+
+            renderCart();
             toast("Welcome, " + u.name);
 
             setTimeout(() => { $("search").focus(); }, 150);
@@ -754,7 +788,7 @@
             <div class="meta"><span class="st ${low}">Stock: ${p.stock}</span><span class="pr">${money(p.price)}</span></div>
         </div>`;
             }).join("") : `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">no results</div>`;
-            $("grid").querySelectorAll(".p-card:not(.oos)").forEach(c => c.onclick = () => toast(+c.dataset.id));
+            $("grid").querySelectorAll(".p-card:not(.oos)").forEach(c => c.onclick = () => addToCart(+c.dataset.id));
         }
 
         $("btnSearch").onclick = () => renderProducts($("search").value);
@@ -769,6 +803,48 @@
             renderProducts("");
             $("search").focus();
         };
+
+        function renderCart() {
+            const ticket = t;
+            $("cartTitle").textContent = `🛒 Sale #${ticket.num}`;
+            $("disc").value = ticket.discount || 0;
+
+            if (!ticket.cart.length) {
+                $("cartList").innerHTML = `<div class="empty">The cart is empty.<br>Select products.</div>`;
+                $("cartCount").textContent = "0 items"; $("btnPay").disabled = true;
+            } else {
+                $("cartList").innerHTML = ticket.cart.map((it, i) => `
+            <div class="c-item">
+                <div class="n">${i + 1}</div>
+                <div class="info"><div class="nm">${it.name}</div><div class="un">${money(it.price)} c/u</div></div>
+                <div class="ctrl">
+                    <div class="qty-c">
+                        <button onclick="changeQty(${it.id},-1)">−</button>
+                        <span class="q">${it.qty}</span>
+                        <button onclick="changeQty(${it.id},1)">+</button>
+                    </div>
+                    <div class="c-total">${money(it.price * it.qty)}</div>
+                    <button class="rm" onclick="removeItem(${it.id})">Remove</button>
+                </div>
+            </div>`).join("");
+                $("cartCount").textContent = ticket.cart.reduce((s, i) => s + i.qty, 0) + " items";
+                $("btnPay").disabled = false;
+            }
+        }
+
+        function removeItem(id) {
+            const ticket = t;
+            ticket.cart = ticket.cart.filter(i => i.id !== id);
+            renderCart();
+        }
+
+        function addToCart(id) {
+            const ticket = t;
+            const p = products.find(x => x.id === id);
+            ticket.cart.push({ id: p.id, barcode: p.barcode, name: p.name, price: p.price, qty: 1 });
+            renderCart();
+            toast(p.name + " added");
+        }
 
         // start up
         renderCats();
