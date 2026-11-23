@@ -816,6 +816,11 @@
             $("search").focus();
         };
 
+        function sub() { return t.cart.reduce((s, i) => s + i.price * i.qty, 0); }
+        function discPct() { return Math.min(100, Math.max(0, parseFloat($("disc").value) || 0)); }
+        function discAmt() { return sub() * discPct() / 100; }
+        function total() { return sub() - discAmt(); }
+
         function renderCart() {
             const ticket = t;
             $("cartTitle").textContent = `🛒 Sale #${ticket.num}`;
@@ -842,7 +847,16 @@
                 $("cartCount").textContent = ticket.cart.reduce((s, i) => s + i.qty, 0) + " items";
                 $("btnPay").disabled = false;
             }
+            $("subEl").textContent = money(sub());
+            $("discEl").textContent = "-" + money(discAmt());
+            $("totEl").textContent = money(total());
         }
+
+        $("disc").oninput = () => {
+            const ticket = t;
+            ticket.discount = discPct();
+            renderCart();
+        };
 
         function changeQty(id, d) {
             const ticket = t;
