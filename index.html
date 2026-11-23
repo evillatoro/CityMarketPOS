@@ -34,6 +34,12 @@
             box-sizing: border-box;
         }
 
+        .main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
         #loginScreen {
             position: fixed;
             inset: 0;
@@ -47,7 +53,7 @@
         #loginScreen.hidden {
             display: none;
         }
-        
+
         .login-card {
             background: var(--card);
             border-radius: 20px;
@@ -131,6 +137,37 @@
             flex-wrap: wrap;
         }
 
+        .search-bar {
+            padding: 12px 14px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .search-wrap {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 11px 36px 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: var(--card);
+            color: var(--text);
+            outline: none;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+        }
+
         @media (max-width: 900px) {
             header {
                 height: auto;
@@ -139,12 +176,31 @@
                 gap: 6px;
             }
 
+            .main {
+                flex-direction: column;
+            }
+
             .header-right {
                 gap: 4px;
             }
 
             .login-card {
                 padding: 28px 20px;
+            }
+
+            .search-bar {
+                padding: 8px 10px;
+            }
+
+            .search-bar input {
+                padding: 10px 32px 10px 12px;
+                font-size: 0.95rem;
+            }
+
+            .search-bar .btn {
+                height: 40px;
+                padding: 0 12px;
+                font-size: 0.85rem;
             }
         }
 
@@ -282,6 +338,196 @@
             animation: slideIn 0.25s ease;
             max-width: 320px;
         }
+
+        .products-panel {
+            width: 56%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border);
+            background: var(--card);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 11px 36px 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: var(--card);
+            color: var(--text);
+            outline: none;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-clear-search {
+            position: absolute;
+            right: 8px;
+            background: var(--border);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--muted);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-clear-search.show {
+            display: flex;
+        }
+
+        .btn-clear-search:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .search-bar .btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            height: 44px;
+            padding: 0 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .search-bar .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .cat-bar {
+            display: flex;
+            gap: 6px;
+            padding: 10px 14px;
+            overflow-x: auto;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+        }
+
+        .products-panel {
+            width: 100%;
+        }
+
+        .products-panel {
+            height: 52%;
+        }
+
+        .cat-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .cat-btn.active,
+        .cat-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        .products-grid {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+            gap: 10px;
+            align-content: start;
+        }
+
+        .p-card {
+            background: var(--card);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+        }
+
+        .p-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .p-card:active {
+            transform: translateY(-1px);
+        }
+
+        .p-card .bc {
+            font-size: 0.68rem;
+            color: var(--muted);
+            font-family: monospace;
+            letter-spacing: 0.3px;
+        }
+
+        .p-card .nm {
+            font-weight: 650;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            flex: 1;
+            color: var(--text);
+        }
+
+        .p-card .meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 6px;
+        }
+
+        .p-card .st {
+            font-size: 0.74rem;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .p-card .st.low {
+            color: var(--danger);
+            font-weight: 700;
+        }
+
+        .p-card .pr {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .p-card.oos {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .p-card .tag {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 0.62rem;
+            font-weight: 600;
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 2px 7px;
+            border-radius: 6px;
+        }
     </style>
 </head>
 
@@ -315,31 +561,87 @@
             <button class="h-btn" id="btnAdmin">⚙ Admin</button>
             <button class="h-btn" id="btnLogout">Log Out</button>
         </div>
-
-        <!-- opening cash for the day -->
-        <div class="overlay" id="openCashModal">
-            <div class="modal" style="max-width:400px;">
-                <div class="modal-h">Opening the Cash Register</div>
-                <div class="modal-b">
-                    <p style="margin-bottom:14px;color:var(--muted);font-size:0.95rem;">Indicate the amount of cash with which you begin the day (cash float).</p>
-                    <label>Initial cash ($)</label>
-                    <input type="number" id="openCashAmt" min="0" step="0.01" placeholder="0.00"
-                        style="font-size:1.3rem;text-align:center;">
-                </div>
-                <div class="modal-f">
-                    <button class="btn-ok" id="btnOpenCash" style="flex:1;">Open Cash Register</button>
-                </div>
-            </div>
-        </div>
     </header>
 
-    <script>
+    <div class="main">
+        <div class="products-panel">
+            <div class="search-bar">
+                <div class="search-wrap">
+                    <input type="text" id="search" placeholder="Buscar o escanear código..." autocomplete="off">
+                    <button class="btn-clear-search" id="btnClearSearch" title="Limpiar">✕</button>
+                </div>
+                <button class="btn" id="btnSearch">Buscar</button>
+            </div>
+            <div class="cat-bar" id="catBar"></div>
+            <div class="products-grid" id="grid"></div>
+        </div>
+    </div>
 
+    <!-- opening cash for the day -->
+    <div class="overlay" id="openCashModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-h">Opening the Cash Register</div>
+            <div class="modal-b">
+                <p style="margin-bottom:14px;color:var(--muted);font-size:0.95rem;">Indicate the amount of cash with
+                    which you begin the day (cash float).</p>
+                <label>Initial cash ($)</label>
+                <input type="number" id="openCashAmt" min="0" step="0.01" placeholder="0.00"
+                    style="font-size:1.3rem;text-align:center;">
+            </div>
+            <div class="modal-f">
+                <button class="btn-ok" id="btnOpenCash" style="flex:1;">Open Cash Register</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_PRODUCTS = [
+            { id: 1, barcode: "7501000000011", name: "White Rice 1kg", stock: 45, price: 1.85, cost: 1.20, category: "Groceries" },
+            { id: 2, barcode: "7501000000028", name: "Black Bean 1kg", stock: 38, price: 2.10, cost: 1.40, category: "Groceries" },
+            { id: 3, barcode: "7501000000035", name: "Vegetable Oil 1L", stock: 52, price: 3.45, cost: 2.40, category: "Groceries" },
+            { id: 4, barcode: "7501000000042", name: "White Sugar 1kg", stock: 60, price: 1.55, cost: 1.00, category: "Groceries" },
+            { id: 5, barcode: "7501000000059", name: "Table Salt 1kg", stock: 70, price: 0.65, cost: 0.35, category: "Groceries" },
+            { id: 6, barcode: "7501000000066", name: "Carton Eggs x12", stock: 40, price: 2.80, cost: 2.00, category: "Dairy" },
+            { id: 7, barcode: "7501000000073", name: "Whole Milk 1L", stock: 55, price: 1.95, cost: 1.35, category: "Dairy" },
+            { id: 8, barcode: "7501000000080", name: "White Sliced ​​Bread", stock: 28, price: 2.25, cost: 1.50, category: "Groceries" },
+            { id: 9, barcode: "7501000000097", name: "Spaghetti Pasta 500g", stock: 48, price: 1.35, cost: 0.85, category: "Groceries" },
+            { id: 10, barcode: "7501000000103", name: "Tuna in Water 140g", stock: 65, price: 1.75, cost: 1.15, category: "Groceries" },
+            { id: 11, barcode: "7501000000110", name: "Instant Soup", stock: 80, price: 0.85, cost: 0.50, category: "Groceries" },
+            { id: 12, barcode: "7501000000127", name: "Ground Coffee 200g", stock: 32, price: 4.50, cost: 3.00, category: "Groceries" },
+            { id: 13, barcode: "7501000000134", name: "Bath Soap 3-pack", stock: 42, price: 2.90, cost: 1.90, category: "Cleaning" },
+            { id: 14, barcode: "7501000000141", name: "Detergent 1kg", stock: 35, price: 5.25, cost: 3.50, category: "Cleaning" },
+            { id: 15, barcode: "7501000000158", name: "4r Toilet Paper", stock: 50, price: 3.80, cost: 2.50, category: "Cleaning" },
+            { id: 16, barcode: "7501000000165", name: "Napkins 100u", stock: 45, price: 1.60, cost: 1.00, category: "Cleaning" },
+            { id: 17, barcode: "7501000000172", name: "Galletas Marías 170g", stock: 58, price: 1.40, cost: 0.90, category: "Snacks" },
+            { id: 18, barcode: "7501000000189", name: "Cola 2L Soft Drink", stock: 40, price: 2.15, cost: 1.40, category: "Beverages" },
+            { id: 19, barcode: "7501000000196", name: "Bottled Water 1.5L", stock: 75, price: 0.95, cost: 0.50, category: "Beverages" },
+            { id: 20, barcode: "7501000000202", name: "Orange Juice 1L", stock: 30, price: 2.40, cost: 1.55, category: "Beverages" },
+            { id: 21, barcode: "7501000000219", name: "Red Apples kg", stock: 25, price: 2.75, cost: 1.80, category: "Fruits and Vegetables" },
+            { id: 22, barcode: "7501000000226", name: "Bananas kg", stock: 40, price: 0.90, cost: 0.50, category: "Fruits and Vegetables" },
+            { id: 23, barcode: "7501000000233", name: "Tomatoes kg", stock: 35, price: 1.85, cost: 1.10, category: "Fruits and Vegetables" },
+            { id: 24, barcode: "7501000000240", name: "White Onion kg", stock: 48, price: 1.20, cost: 0.70, category: "Fruits and Vegetables" },
+            { id: 25, barcode: "7501000000257", name: "Potatoes kg", stock: 55, price: 1.10, cost: 0.65, category: "Fruits and Vegetables" },
+            { id: 26, barcode: "7501000000264", name: "Fresh Cheese 400g", stock: 22, price: 4.80, cost: 3.20, category: "Dairy" },
+            { id: 27, barcode: "7501000000271", name: "Butter 200g", stock: 30, price: 2.60, cost: 1.75, category: "Dairy" },
+            { id: 28, barcode: "7501000000288", name: "Mayonnaise 400g", stock: 38, price: 2.95, cost: 1.90, category: "Groceries" },
+            { id: 29, barcode: "7501000000295", name: "Tomato Sauce 400g", stock: 44, price: 1.70, cost: 1.05, category: "Groceries" },
+            { id: 30, barcode: "7501000000301", name: "Cereal Corn Flakes 300g", stock: 26, price: 3.90, cost: 2.50, category: "Groceries" }
+        ];
+
+        const CATS = ["All", "Groceries", "Dairy", "Beverages", "Cleaning", "Snacks", "Fruits and Vegetables", "Other"];
+
+        let products = JSON.parse(localStorage.getItem('cm_products')) || structuredClone(DEFAULT_PRODUCTS);
+        products = products.map(p => ({ ...p, category: p.category || "Other", cost: p.cost != null ? p.cost : +(p.price * 0.65).toFixed(2), supplier: p.supplier || "" }));
         let openingCash = JSON.parse(localStorage.getItem('cm_opening') || "null");
         let users = [
             { id: 1, name: "Admin", pin: "1234", role: "admin" },
             { id: 2, name: "Cashier 1", pin: "0000", role: "cashier" }
         ];
+
+        let lowTh = parseInt(localStorage.getItem('cm_lowstock')) || 5;
+
+        let currentUser = null;
+        let curFilter = "", curCat = "All", payMethod = "cash", salesFilter = "today";
 
         const $ = id => document.getElementById(id);
 
@@ -403,6 +705,50 @@
         $("btnDoLogin").onclick = doLogin;
         $("loginPin").onkeyup = e => { if (e.key === "Enter") doLogin(); };
 
+        function renderCats() {
+            $("catBar").innerHTML = CATS.map(c =>
+                `<button class="cat-btn ${c === curCat ? 'active' : ''}" data-c="${c}">${c}</button>`
+            ).join("");
+            $("catBar").querySelectorAll(".cat-btn").forEach(b => b.onclick = () => {
+                curCat = b.dataset.c; renderCats(); renderProducts(curFilter);
+            });
+        }
+
+        function renderProducts(f = "") {
+            curFilter = f.toLowerCase().trim();
+            let list = products.filter(p => {
+                const ms = p.name.toLowerCase().includes(curFilter) || p.barcode.includes(curFilter);
+                const mc = curCat === "All" || p.category === curCat;
+                return ms && mc;
+            });
+            $("grid").innerHTML = list.length ? list.map(p => {
+                const low = p.stock > 0 && p.stock <= lowTh ? "low" : "";
+                return `<div class="p-card ${p.stock <= 0 ? 'oos' : ''}" data-id="${p.id}">
+            <span class="tag">${p.category}</span>
+            <div class="bc">${p.barcode}</div>
+            <div class="nm">${p.name}</div>
+            <div class="meta"><span class="st ${low}">Stock: ${p.stock}</span><span class="pr">${money(p.price)}</span></div>
+        </div>`;
+            }).join("") : `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">Sin resultados</div>`;
+            $("grid").querySelectorAll(".p-card:not(.oos)").forEach(c => c.onclick = () => toast(+c.dataset.id));
+        }
+
+        $("btnSearch").onclick = () => renderProducts($("search").value);
+
+        // Clear search
+        $("search").oninput = () => {
+            $("btnClearSearch").classList.toggle("show", $("search").value.length > 0);
+        };
+        $("btnClearSearch").onclick = () => {
+            $("search").value = "";
+            $("btnClearSearch").classList.remove("show");
+            renderProducts("");
+            $("search").focus();
+        };
+
+        // start up
+        renderCats();
+        renderProducts();
         showLogin();
     </script>
 </body>
