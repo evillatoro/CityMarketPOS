@@ -725,6 +725,9 @@
 
         $("btnDoLogin").onclick = doLogin;
         $("loginPin").onkeyup = e => { if (e.key === "Enter") doLogin(); };
+        $("btnLogout").onclick = async () => {
+            currentUser = null; showLogin();
+        };
 
         function renderCats() {
             $("catBar").innerHTML = CATS.map(c =>
