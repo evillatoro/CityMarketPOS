@@ -34,6 +34,31 @@
             box-sizing: border-box;
         }
 
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.15;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-tag {
+            font-size: 0.68rem;
+            font-weight: 600;
+            opacity: 0.7;
+            letter-spacing: 0.3px;
+        }
+
         .main {
             display: flex;
             flex: 1;
@@ -554,10 +579,6 @@
         <div class="header-right">
             <div class="datetime" id="clock">--</div>
             <div class="user-badge" id="userBadge">—</div>
-            <button class="h-btn" id="btnLowStock" style="display:none;">⚠ Stock <span class="badge-red"
-                    id="lowCount">0</span></button>
-            <button class="h-btn" id="btnAssistant" title="Asistente">🤖</button>
-            <button class="h-btn" id="btnTheme">🌙</button>
             <button class="h-btn" id="btnAdmin">⚙ Admin</button>
             <button class="h-btn" id="btnLogout">Log Out</button>
         </div>
@@ -567,10 +588,10 @@
         <div class="products-panel">
             <div class="search-bar">
                 <div class="search-wrap">
-                    <input type="text" id="search" placeholder="Buscar o escanear código..." autocomplete="off">
-                    <button class="btn-clear-search" id="btnClearSearch" title="Limpiar">✕</button>
+                    <input type="text" id="search" placeholder="Search..." autocomplete="off">
+                    <button class="btn-clear-search" id="btnClearSearch" title="Clear">✕</button>
                 </div>
-                <button class="btn" id="btnSearch">Buscar</button>
+                <button class="btn" id="btnSearch">Search</button>
             </div>
             <div class="cat-bar" id="catBar"></div>
             <div class="products-grid" id="grid"></div>
@@ -729,7 +750,7 @@
             <div class="nm">${p.name}</div>
             <div class="meta"><span class="st ${low}">Stock: ${p.stock}</span><span class="pr">${money(p.price)}</span></div>
         </div>`;
-            }).join("") : `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">Sin resultados</div>`;
+            }).join("") : `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);">no results</div>`;
             $("grid").querySelectorAll(".p-card:not(.oos)").forEach(c => c.onclick = () => toast(+c.dataset.id));
         }
 
